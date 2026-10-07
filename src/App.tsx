@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Task } from './types/task';
 import type { FocusSession } from './types/session';
 import { loadTasks, saveTasks } from './utils/taskStorage';
-import { loadFocusSessions } from './utils/sessionStorage';
+import { loadFocusSessions, saveFocusSessions } from './utils/sessionStorage';
 import { Header } from './components/layout/Header';
 import { Navigation } from './components/layout/Navigation';
 import { TaskBoard } from './components/tasks/TaskBoard';
@@ -43,6 +43,11 @@ export function App() {
     saveTasks(tasks);
   }, [tasks]);
 
+  // Automatically persist sessions to localStorage on changes
+  useEffect(() => {
+    saveFocusSessions(sessions);
+  }, [sessions]);
+
   // Person 1 Task Manager Handlers
   const handleAddTask = (newTask: Task) => {
     setTasks((prev) => [newTask, ...prev]);
@@ -66,6 +71,15 @@ export function App() {
 
   const handleClearCompleted = () => {
     setTasks((prev) => prev.filter((t) => !t.completed));
+  };
+
+  // Person 2 Focus Timer Handlers
+  const handleAddSession = (newSession: FocusSession) => {
+    setSessions((prev) => [newSession, ...prev]);
+  };
+
+  const handleClearSessions = () => {
+    setSessions([]);
   };
 
   return (
@@ -109,34 +123,41 @@ export function App() {
           </a>
         </div>
 
-        {/* Tab Views */}
-        {activeTab === 'tasks' && (
-          <section id="task-manager" aria-label="Task Manager Module">
-            <TaskBoard
-              tasks={tasks}
-              onAddTask={handleAddTask}
-              onUpdateTask={handleUpdateTask}
-              onDeleteTask={handleDeleteTask}
-              onToggleComplete={handleToggleComplete}
-              onClearCompleted={handleClearCompleted}
-            />
-          </section>
-        )}
+        {/* Tab Views - Kept in DOM so Focus Timer continues ticking when switching tabs */}
+        <section
+          id="task-manager"
+          aria-label="Task Manager Module"
+          className={activeTab === 'tasks' ? 'block' : 'hidden'}
+        >
+          <TaskBoard
+            tasks={tasks}
+            onAddTask={handleAddTask}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+            onToggleComplete={handleToggleComplete}
+            onClearCompleted={handleClearCompleted}
+          />
+        </section>
 
-        {activeTab === 'timer' && (
-          <section id="focus-timer" aria-label="Focus Timer Module">
-            <FocusTimer
-              sessions={sessions}
-              onAddSession={(newSession) => setSessions((prev) => [newSession, ...prev])}
-            />
-          </section>
-        )}
+        <section
+          id="focus-timer"
+          aria-label="Focus Timer Module"
+          className={activeTab === 'timer' ? 'block' : 'hidden'}
+        >
+          <FocusTimer
+            sessions={sessions}
+            onAddSession={handleAddSession}
+            onClearSessions={handleClearSessions}
+          />
+        </section>
 
-        {activeTab === 'dashboard' && (
-          <section id="productivity-dashboard" aria-label="Productivity Dashboard Module">
-            <Dashboard tasks={tasks} sessions={sessions} />
-          </section>
-        )}
+        <section
+          id="productivity-dashboard"
+          aria-label="Productivity Dashboard Module"
+          className={activeTab === 'dashboard' ? 'block' : 'hidden'}
+        >
+          <Dashboard tasks={tasks} sessions={sessions} />
+        </section>
       </main>
 
       {/* Footer with GDG Style */}
@@ -148,9 +169,9 @@ export function App() {
             <span>GDG-Themed VoiceBoard</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 1: Task Manager ✓</span>
-            <span>Person 2: Focus Timer (Pending)</span>
-            <span>Person 3: Dashboard (Pending)</span>
+            <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 1: Tasks ✓</span>
+            <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 2: Timer ✓</span>
+            <span className="text-[#1a73e8] dark:text-blue-400 font-medium">Person 3: Dashboard</span>
           </div>
         </div>
       </footer>
