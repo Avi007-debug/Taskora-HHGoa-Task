@@ -14,6 +14,29 @@ export function App() {
   const [activeTab, setActiveTab] = useState<'tasks' | 'timer' | 'dashboard'>('tasks');
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [sessions, setSessions] = useState<FocusSession[]>(() => loadFocusSessions());
+  
+  // Theme state: defaults to 'light' with GDG colors, saved in localStorage
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('taskora_theme');
+    return saved === 'dark' ? 'dark' : 'light';
+  });
+
+  // Sync document root class for Tailwind dark variant and HTML color-scheme
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    } else {
+      root.classList.add('light');
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('taskora_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   // Automatically persist tasks to localStorage on changes
   useEffect(() => {
@@ -46,9 +69,14 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
-      {/* Top Application Header */}
-      <Header activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className="min-h-screen bg-[#f8f9fa] dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white transition-colors duration-150">
+      {/* Top Application Header with GDG Bar and Theme Toggle */}
+      <Header
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
 
       {/* Mobile Navigation bar */}
       <Navigation
@@ -59,22 +87,22 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Wispr Flow Referral Banner Notice */}
-        <div className="mb-6 p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-950/60 to-purple-950/60 border border-indigo-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2.5 text-slate-300">
-            <span className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400">
+        <div className="mb-6 p-3.5 sm:p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs transition-colors">
+          <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-300">
+            <span className="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-[#1a73e8] dark:text-blue-400">
               <Mic className="w-4 h-4" />
             </span>
             <span>
-              <strong className="text-white font-semibold">Wispr Flow Shortlisting Task:</strong> Voice-driven development for high-velocity productivity.
+              <strong className="text-slate-900 dark:text-white font-semibold">Wispr Flow Shortlisting Task:</strong> Voice-driven development for high-velocity productivity.
             </span>
           </div>
           <a
             href="https://ref.wisprflow.ai/hhg"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-semibold text-indigo-400 hover:text-indigo-300 hover:underline shrink-0"
+            className="inline-flex items-center gap-1.5 font-semibold text-[#1a73e8] dark:text-blue-400 hover:underline shrink-0"
           >
             <span>Wispr Flow Referral: ref.wisprflow.ai/hhg</span>
             <ExternalLink className="w-3 h-3" />
@@ -111,16 +139,16 @@ export function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/60 py-6 text-center text-xs text-slate-400">
+      {/* Footer with GDG Style */}
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-200">Taskora</span>
-            <span>—</span>
-            <span>Wispr Flow VoiceBoard Project</span>
+            <span className="font-bold text-slate-900 dark:text-slate-200">Taskora</span>
+            <span>•</span>
+            <span>GDG-Themed VoiceBoard</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400">
-            <span className="text-emerald-400 font-medium">Person 1: Task Manager ✓</span>
+          <div className="flex items-center gap-4">
+            <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 1: Task Manager ✓</span>
             <span>Person 2: Focus Timer (Pending)</span>
             <span>Person 3: Dashboard (Pending)</span>
           </div>
