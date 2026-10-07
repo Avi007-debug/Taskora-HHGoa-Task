@@ -112,7 +112,13 @@ export const TaskCard: FC<TaskCardProps> = ({
     >
       {isEditing ? (
         /* Edit Mode */
-        <form onSubmit={handleSaveEdit} className="space-y-3">
+        <form 
+          onSubmit={handleSaveEdit} 
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') handleCancelEdit();
+          }}
+          className="space-y-3"
+        >
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
               Title <span className="text-[#EA4335]">*</span>

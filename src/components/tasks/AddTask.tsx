@@ -132,7 +132,16 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
         </div>
       ) : (
         /* Expanded Form State */
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form 
+          onSubmit={handleSubmit} 
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsOpen(false);
+              setError('');
+            }
+          }}
+          className="space-y-4"
+        >
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <PlusCircle className="w-5 h-5 text-[#1a73e8]" />
