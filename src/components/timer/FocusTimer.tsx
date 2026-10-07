@@ -1,5 +1,6 @@
-import { FC, useState, useEffect, useCallback } from 'react';
-import { Timer, Bell } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import type { FC } from 'react';
+import { Timer } from 'lucide-react';
 import type { FocusSession } from '../../types/session';
 import { generateSessionId, saveFocusSessions } from '../../utils/sessionStorage';
 import { TimerControls } from './TimerControls';
@@ -30,14 +31,24 @@ export const FocusTimer: FC<FocusTimerProps> = ({
     }
   }, []);
 
+  // Timer interval effect
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
 
-    if (isRunning && timeLeft > 0) {
+    if (isRunning) {
       interval = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
-    } else if (isRunning && timeLeft === 0) {
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isRunning]);
+
+  // Session completion effect
+  useEffect(() => {
+    if (isRunning && timeLeft === 0) {
       setIsRunning(false);
       playChime();
       
@@ -57,10 +68,6 @@ export const FocusTimer: FC<FocusTimerProps> = ({
       // Reset timer
       setTimeLeft(DEFAULT_TIME);
     }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
   }, [isRunning, timeLeft, onAddSession, sessions, playChime]);
 
   const handleStart = () => setIsRunning(true);
