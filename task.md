@@ -81,17 +81,17 @@
 - `src/utils/sessionStorage.ts`
 
 ### Detailed Checklist:
-- [ ] Create timer state with remaining seconds and running/paused status.
-- [ ] Default the countdown timer to 25:00 (1500 seconds).
-- [ ] Implement controls: Start, Pause, and Reset.
-- [ ] Ensure countdown does not duplicate intervals when Start is clicked multiple times.
-- [ ] When timer reaches 00:00, generate a completed `FocusSession` record (`id`, `duration: 25`, `completedAt`).
-- [ ] Persist completed sessions in `localStorage` under `taskora_focus_sessions`.
-- [ ] Display session history for recent/today's sessions.
-- [ ] Show total count of completed focus sessions.
-- [ ] Add completion alert, sound chime, or visual notification.
-- [ ] Test timer persistence and state across page refresh, pause, and reset.
-- [ ] Expose sessions data to `App.tsx` for Dashboard consumption.
+- [x] Create timer state with remaining seconds and running/paused status.
+- [x] Default the countdown timer to 25:00 (1500 seconds).
+- [x] Implement controls: Start, Pause, and Reset.
+- [x] Ensure countdown does not duplicate intervals when Start is clicked multiple times.
+- [x] When timer reaches 00:00, generate a completed `FocusSession` record (`id`, `duration: 25`, `completedAt`).
+- [x] Persist completed sessions in `localStorage` under `taskora_focus_sessions`.
+- [x] Display session history for recent/today's sessions.
+- [x] Show total count of completed focus sessions.
+- [x] Add completion alert, sound chime, or visual notification.
+- [x] Test timer persistence and state across page refresh, pause, and reset.
+- [x] Expose sessions data to `App.tsx` for Dashboard consumption.
 
 ---
 
