@@ -18,7 +18,10 @@
 - [x] **Storage Foundation**:
   - [x] `src/utils/taskStorage.ts` for task persistence under `taskora_tasks`
   - [x] `src/utils/sessionStorage.ts` for timer session persistence under `taskora_focus_sessions`
+- [x] **Theme System**: Clean GDG Palette (Google Blue `#4285F4`, Red `#EA4335`, Yellow `#FBBC04`, Green `#34A853`) with Light/Dark Mode toggle persisted in `localStorage`
+- [x] **Database Schema**: Full Supabase PostgreSQL schema with RLS policies, indexes, and queries defined in `supabase/schema.sql`
 - [x] **Git Branch Structure**: Set up feature branch workflow (`feature/task-manager`, `feature/focus-timer`, `feature/dashboard-ui`)
+
 
 ---
 
