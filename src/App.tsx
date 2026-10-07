@@ -3,18 +3,38 @@ import type { Task } from './types/task';
 import type { FocusSession } from './types/session';
 import { loadTasks, saveTasks } from './utils/taskStorage';
 import { loadFocusSessions, saveFocusSessions } from './utils/sessionStorage';
+import { supabase } from './lib/supabaseClient';
+import {
+  fetchTasksFromSupabase,
+  createTaskInSupabase,
+  updateTaskInSupabase,
+  deleteTaskFromSupabase,
+  clearCompletedTasksInSupabase,
+} from './services/taskService';
+import {
+  fetchSessionsFromSupabase,
+  createSessionInSupabase,
+  clearSessionsInSupabase,
+} from './services/sessionService';
 import { Header } from './components/layout/Header';
 import { Navigation } from './components/layout/Navigation';
 import { TaskBoard } from './components/tasks/TaskBoard';
 import { FocusTimer } from './components/timer/FocusTimer';
 import { Dashboard } from './components/dashboard/Dashboard';
+import { AuthModal } from './components/auth/AuthModal';
 import { Mic, ExternalLink } from 'lucide-react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'tasks' | 'timer' | 'dashboard'>('tasks');
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [sessions, setSessions] = useState<FocusSession[]>(() => loadFocusSessions());
-  
+  const [isCloudSynced, setIsCloudSynced] = useState(false);
+
+  // Authentication State
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   // Theme state: defaults to 'light' with GDG colors, saved in localStorage
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('taskora_theme');
@@ -38,58 +58,131 @@ export function App() {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  // Automatically persist tasks to localStorage on changes
+  // Listen to Supabase Auth state changes
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUserEmail(session.user.email || null);
+        setUserId(session.user.id);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUserEmail(session.user.email || null);
+        setUserId(session.user.id);
+      } else {
+        setUserEmail(null);
+        setUserId(undefined);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Fetch live tasks & sessions from Supabase on mount and whenever user changes
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCloudData = async () => {
+      const [tasksRes, sessionsRes] = await Promise.all([
+        fetchTasksFromSupabase(userId),
+        fetchSessionsFromSupabase(userId),
+      ]);
+
+      if (isMounted) {
+        setTasks(tasksRes.tasks);
+        setSessions(sessionsRes.sessions);
+        setIsCloudSynced(tasksRes.fromCloud && sessionsRes.fromCloud);
+      }
+    };
+
+    loadCloudData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [userId]);
+
+  // Synchronize tasks to localStorage cache
   useEffect(() => {
     saveTasks(tasks);
   }, [tasks]);
 
-  // Automatically persist sessions to localStorage on changes
+  // Synchronize sessions to localStorage cache
   useEffect(() => {
     saveFocusSessions(sessions);
   }, [sessions]);
 
-  // Person 1 Task Manager Handlers
+  // Person 1 Task Manager Handlers (Optimistic UI + Supabase Cloud Sync)
   const handleAddTask = (newTask: Task) => {
     setTasks((prev) => [newTask, ...prev]);
+    createTaskInSupabase(newTask, userId).then((success) => {
+      if (success) setIsCloudSynced(true);
+    });
   };
 
   const handleUpdateTask = (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>) => {
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
     );
+    updateTaskInSupabase(id, updates);
   };
 
   const handleDeleteTask = (id: string) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
+    deleteTaskFromSupabase(id);
   };
 
   const handleToggleComplete = (id: string) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+    const nextCompleted = !task.completed;
+
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+      prev.map((t) => (t.id === id ? { ...t, completed: nextCompleted } : t))
     );
+    updateTaskInSupabase(id, { completed: nextCompleted });
   };
 
   const handleClearCompleted = () => {
     setTasks((prev) => prev.filter((t) => !t.completed));
+    clearCompletedTasksInSupabase(userId);
   };
 
-  // Person 2 Focus Timer Handlers
+  // Person 2 Focus Timer Handlers (Optimistic UI + Supabase Cloud Sync)
   const handleAddSession = (newSession: FocusSession) => {
     setSessions((prev) => [newSession, ...prev]);
+    createSessionInSupabase(newSession, userId).then((success) => {
+      if (success) setIsCloudSynced(true);
+    });
   };
 
   const handleClearSessions = () => {
     setSessions([]);
+    clearSessionsInSupabase(userId);
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUserEmail(null);
+    setUserId(undefined);
   };
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white transition-colors duration-150">
-      {/* Top Application Header with GDG Bar and Theme Toggle */}
+      {/* Top Application Header with GDG Bar, Auth & Theme Toggle */}
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
         theme={theme}
         onToggleTheme={toggleTheme}
+        userEmail={userEmail}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onSignOut={handleSignOut}
+        isCloudSynced={isCloudSynced}
       />
 
       {/* Mobile Navigation bar */}
@@ -159,6 +252,15 @@ export function App() {
           <Dashboard tasks={tasks} sessions={sessions} />
         </section>
       </main>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={(email) => {
+          setUserEmail(email);
+        }}
+      />
 
       {/* Footer with GDG Style */}
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">

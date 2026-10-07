@@ -124,14 +124,16 @@
 
 ## 🤝 Phase 4 — Integration & Merge Plan
 
-- [ ] Merge `feature/task-manager` into `main` (Person 1 + Integrator)
-- [ ] Merge `feature/focus-timer` into `main` (Person 2 + Integrator)
+- [x] Merge `feature/task-manager` into `main` (Person 1 + Integrator)
+- [x] Merge `feature/focus-timer` into `main` (Person 2 + Integrator)
+- [x] Connect live Supabase cloud database sync for tasks and focus sessions with offline fallback
+- [x] Implement Supabase Auth (Email & Password Sign In, Sign Up, and Sign Out)
 - [ ] Merge `feature/dashboard-ui` into `main` (Person 3 + Integrator)
-- [ ] Wire shared state in `App.tsx`:
-  - `tasks` from `loadTasks()` -> `TaskBoard` and `Dashboard`
-  - `sessions` from `loadFocusSessions()` -> `FocusTimer` and `Dashboard`
-- [ ] Verify no `localStorage` key collisions (`taskora_tasks` vs `taskora_focus_sessions`)
-- [ ] End-to-end testing of all features together.
+- [x] Wire shared state in `App.tsx`:
+  - `tasks` from Supabase / `loadTasks()` -> `TaskBoard` and `Dashboard`
+  - `sessions` from Supabase / `loadFocusSessions()` -> `FocusTimer` and `Dashboard`
+- [x] Verify no `localStorage` key collisions (`taskora_tasks` vs `taskora_focus_sessions`)
+- [x] End-to-end testing of Task Manager and Focus Timer together.
 
 ---
 
