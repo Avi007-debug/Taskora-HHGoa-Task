@@ -1,7 +1,8 @@
 import { useState, type FC, type FormEvent, type KeyboardEvent } from 'react';
 import type { Priority, Task } from '../../types/task';
 import { generateTaskId } from '../../utils/taskStorage';
-import { PlusCircle, Mic, AlertCircle, X, Sparkles } from 'lucide-react';
+import { useVoiceInput } from '../../hooks/useVoiceInput';
+import { PlusCircle, Mic, MicOff, AlertCircle, X, Sparkles, Volume2 } from 'lucide-react';
 
 interface AddTaskProps {
   onAddTask: (task: Task) => void;
@@ -13,6 +14,14 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<Priority>('medium');
   const [error, setError] = useState('');
+
+  // Voice speech-to-text hook
+  const { isListening, toggleListening, error: voiceError, isSupported } = useVoiceInput({
+    onResult: (spokenText) => {
+      setTitle(spokenText);
+      if (error) setError('');
+    },
+  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -94,15 +103,28 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
                   if (error) setError('');
                 }}
                 onKeyDown={handleQuickAddKeyDown}
-                placeholder="What do you want to achieve? Speak with Wispr Flow or type..."
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#1a73e8] focus:ring-2 focus:ring-blue-500/20 transition-all pr-10"
+                placeholder={isListening ? "Listening... Speak your task now" : "What do you want to achieve? Speak with Wispr Flow or click mic..."}
+                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none transition-all pr-12 ${
+                  isListening
+                    ? 'border-[#EA4335] ring-2 ring-red-500/20 bg-red-50/20 dark:bg-red-950/20'
+                    : 'border-slate-300 dark:border-slate-700 focus:border-[#1a73e8] focus:ring-2 focus:ring-blue-500/20'
+                }`}
               />
-              <span 
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
-                title="Wispr Flow voice typing enabled"
+
+              {/* Interactive Voice Mic Button */}
+              <button
+                type="button"
+                onClick={toggleListening}
+                className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-all ${
+                  isListening
+                    ? 'bg-[#EA4335] text-white animate-pulse shadow-md'
+                    : 'text-[#1a73e8] hover:bg-blue-50 dark:hover:bg-blue-950/50'
+                }`}
+                title={isListening ? "Stop voice listening" : "Click to speak with voice input"}
+                aria-label="Voice input"
               >
-                <Mic className="w-4 h-4 text-[#1a73e8]" />
-              </span>
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
             </div>
 
             <button
@@ -115,6 +137,30 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
             </button>
           </div>
 
+          {/* Live Voice Listening Pulse Bar */}
+          {isListening && (
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-[#EA4335] text-xs animate-fade-in">
+              <div className="flex items-center gap-2">
+                <Volume2 className="w-4 h-4 animate-bounce" />
+                <span className="font-semibold">Microphone active: speak now (words appear live in the input)</span>
+              </div>
+              <button
+                type="button"
+                onClick={toggleListening}
+                className="px-2 py-0.5 rounded bg-[#EA4335] text-white text-[11px] font-bold"
+              >
+                Done
+              </button>
+            </div>
+          )}
+
+          {voiceError && (
+            <p className="text-xs text-[#EA4335] flex items-center gap-1 mt-1">
+              <AlertCircle className="w-3.5 h-3.5" />
+              {voiceError}
+            </p>
+          )}
+
           {error && (
             <p className="text-xs text-[#EA4335] flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5" />
@@ -123,11 +169,16 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
           )}
 
           {/* Wispr Flow Voice Tip with Google Blue accent */}
-          <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2 border border-slate-200 dark:border-slate-800">
-            <Mic className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-            <span>
-              <strong className="text-slate-800 dark:text-slate-200 font-medium">Wispr Flow Voice Tip:</strong> Dictate task titles and details hands-free using your Wispr Flow voice hotkey.
-            </span>
+          <div className="flex items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2 border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <Mic className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+              <span>
+                <strong className="text-slate-800 dark:text-slate-200 font-medium">Wispr Flow & Voice Mode:</strong> Click the mic to speak in-browser, or press your Wispr Flow hotkey anywhere.
+              </span>
+            </div>
+            {!isSupported && (
+              <span className="text-[10px] text-amber-500 font-medium hidden sm:inline">Desktop Wispr Flow recommended</span>
+            )}
           </div>
         </div>
       ) : (
@@ -159,7 +210,7 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
             </button>
           </div>
 
-          {/* Title */}
+          {/* Title with Voice Mic */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
               Task Title <span className="text-[#EA4335]">*</span>
@@ -172,13 +223,26 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
                   setTitle(e.target.value);
                   if (error) setError('');
                 }}
-                placeholder="e.g. Prepare presentation for GDG community meetup"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#1a73e8] focus:ring-2 focus:ring-blue-500/20 pr-10"
+                placeholder={isListening ? "Listening... Speak task title" : "e.g. Prepare presentation for GDG community meetup"}
+                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none pr-12 transition-all ${
+                  isListening
+                    ? 'border-[#EA4335] ring-2 ring-red-500/20'
+                    : 'border-slate-300 dark:border-slate-700 focus:border-[#1a73e8] focus:ring-2 focus:ring-blue-500/20'
+                }`}
                 autoFocus
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1a73e8]" title="Speak with Wispr Flow">
-                <Mic className="w-4 h-4" />
-              </span>
+              <button
+                type="button"
+                onClick={toggleListening}
+                className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-all ${
+                  isListening
+                    ? 'bg-[#EA4335] text-white animate-pulse'
+                    : 'text-[#1a73e8] hover:bg-blue-50 dark:hover:bg-blue-950/50'
+                }`}
+                title={isListening ? "Stop listening" : "Speak task title"}
+              >
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
             </div>
             {error && (
               <p className="text-xs text-[#EA4335] flex items-center gap-1 mt-1.5">
