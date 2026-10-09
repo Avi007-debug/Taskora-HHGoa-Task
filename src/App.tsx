@@ -273,7 +273,7 @@ export function App() {
           <div className="flex items-center gap-4">
             <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 1: Tasks ✓</span>
             <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 2: Timer ✓</span>
-            <span className="text-[#1a73e8] dark:text-blue-400 font-medium">Person 3: Dashboard</span>
+            <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 3: Dashboard ✓</span>
           </div>
         </div>
       </footer>
