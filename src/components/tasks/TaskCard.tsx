@@ -72,7 +72,7 @@ export const TaskCard: FC<TaskCardProps> = ({
     }
   };
 
-  // Authentic GDG Color Badges: Red (High), Yellow/Amber (Medium), Green (Low)
+  // Vibrant Priority Color Badges: Red (High), Yellow/Amber (Medium), Green (Low)
   const getPriorityBadge = (priority: Priority) => {
     switch (priority) {
       case 'high':
@@ -214,7 +214,7 @@ export const TaskCard: FC<TaskCardProps> = ({
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-              {/* Priority Chip with GDG colors */}
+              {/* Priority Chip with distinct accent colors */}
               <span
                 className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-semibold border ${priorityStyle.bg}`}
               >

@@ -37,7 +37,7 @@ export function App() {
   const [userId, setUserId] = useState<string | undefined>(undefined);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Theme state: defaults to 'light' with GDG colors, saved in localStorage
+  // Theme state: defaults to 'light', saved in localStorage
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('taskora_theme');
     return saved === 'dark' ? 'dark' : 'light';
@@ -175,7 +175,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 flex flex-col selection:bg-blue-500 selection:text-white transition-colors duration-150">
-      {/* Top Application Header with GDG Bar, Auth & Theme Toggle */}
+      {/* Top Application Header with Brand Bar, Auth & Theme Toggle */}
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -276,13 +276,13 @@ export function App() {
         }}
       />
 
-      {/* Footer with GDG Style */}
+      {/* Footer with Team Smashers Style */}
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-900 dark:text-slate-200">Taskora</span>
             <span>•</span>
-            <span>GDG-Themed VoiceBoard</span>
+            <span>Team Smashers • VoiceBoard</span>
           </div>
           <div className="flex items-center gap-4">
             <button

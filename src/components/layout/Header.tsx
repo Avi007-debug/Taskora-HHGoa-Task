@@ -24,12 +24,12 @@ export const Header: FC<HeaderProps> = ({
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md transition-colors">
-      {/* GDG Brand Accent Bar */}
+      {/* Brand Accent Bar */}
       <div className="h-1 w-full flex">
-        <div className="h-full flex-1 bg-[#4285F4]" title="GDG Blue" />
-        <div className="h-full flex-1 bg-[#EA4335]" title="GDG Red" />
-        <div className="h-full flex-1 bg-[#FBBC04]" title="GDG Yellow" />
-        <div className="h-full flex-1 bg-[#34A853]" title="GDG Green" />
+        <div className="h-full flex-1 bg-[#4285F4]" title="Blue" />
+        <div className="h-full flex-1 bg-[#EA4335]" title="Red" />
+        <div className="h-full flex-1 bg-[#FBBC04]" title="Yellow" />
+        <div className="h-full flex-1 bg-[#34A853]" title="Green" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">

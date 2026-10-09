@@ -139,9 +139,9 @@ export const Dashboard: FC<DashboardProps> = ({
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-6">
-      {/* 1. Motivational Hero Banner with GDG Accent Strip */}
+      {/* 1. Motivational Hero Banner with Brand Accent Strip */}
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
-        {/* GDG Accent line */}
+        {/* Brand Accent line */}
         <div className="h-1 w-full flex">
           <div className="h-full flex-1 bg-[#4285F4]" />
           <div className="h-full flex-1 bg-[#EA4335]" />

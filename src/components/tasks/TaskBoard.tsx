@@ -69,9 +69,9 @@ export const TaskBoard: FC<TaskBoardProps> = ({
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-6">
-      {/* GDG Clean Overview Header */}
+      {/* Clean Overview Header */}
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
-        {/* GDG 4-color accent top strip */}
+        {/* 4-color accent top strip */}
         <div className="h-1 w-full flex">
           <div className="h-full flex-1 bg-[#4285F4]" />
           <div className="h-full flex-1 bg-[#EA4335]" />
@@ -94,7 +94,7 @@ export const TaskBoard: FC<TaskBoardProps> = ({
               </p>
             </div>
 
-            {/* Quick Metrics Bar with GDG Colors */}
+            {/* Quick Metrics Bar with Team Smashers Colors */}
             <div className="grid grid-cols-3 gap-2 sm:gap-3 shrink-0 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="text-center px-3 py-1">
                 <span className="block text-xl sm:text-2xl font-extrabold text-[#1a73e8]">{totalTasks}</span>

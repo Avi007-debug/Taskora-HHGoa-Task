@@ -57,7 +57,7 @@ export const WelcomeSplash: FC<WelcomeSplashProps> = ({
       </div>
 
       <div className="relative max-w-lg w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl text-center flex flex-col items-center">
-        {/* GDG Top Color Accent Bar */}
+        {/* Top Color Accent Bar */}
         <div className="absolute top-0 left-0 right-0 h-1.5 rounded-t-3xl flex overflow-hidden">
           <div className="h-full flex-1 bg-[#4285F4]" />
           <div className="h-full flex-1 bg-[#EA4335]" />
@@ -65,7 +65,7 @@ export const WelcomeSplash: FC<WelcomeSplashProps> = ({
           <div className="h-full flex-1 bg-[#34A853]" />
         </div>
 
-        {/* Animated Brand Icon with Orbital GDG Rings */}
+        {/* Animated Brand Icon with Orbital Rings */}
         <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
           {/* Orbital pulsating ring */}
           <div className="absolute inset-0 rounded-2xl border-2 border-dashed border-blue-400/40 dark:border-blue-500/40 animate-spin" style={{ animationDuration: '12s' }} />
@@ -85,7 +85,7 @@ export const WelcomeSplash: FC<WelcomeSplashProps> = ({
         {/* Subtitle Badge */}
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900 text-[#1a73e8] dark:text-blue-400 text-xs font-semibold mb-3">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Google Developer Groups • Goa Challenge</span>
+          <span>Team Smashers • Voice Productivity</span>
         </div>
 
         {/* Title */}

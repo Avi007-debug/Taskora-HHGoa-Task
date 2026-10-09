@@ -93,7 +93,7 @@ export const AuthModal: FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) =>
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in">
       <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800 transition-colors">
-        {/* GDG Accent Strip */}
+        {/* Accent Strip */}
         <div className="absolute top-0 left-6 right-6 h-1 flex rounded-t-full overflow-hidden">
           <div className="h-full flex-1 bg-[#4285F4]" />
           <div className="h-full flex-1 bg-[#EA4335]" />

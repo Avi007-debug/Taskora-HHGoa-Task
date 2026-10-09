@@ -35,7 +35,7 @@ Taskora is a modern productivity dashboard built through voice-driven developmen
 - Priority breakdown distribution (High, Medium, Low).
 - Motivational productivity status messages tailored to progress milestones.
 - Recent Completed Wins log and Urgent High-Priority focus list.
-- Clean GDG Light & Dark mode theme support.
+- Clean Light & Dark mode theme support by Team Smashers.
 
 ---
 
@@ -43,7 +43,7 @@ Taskora is a modern productivity dashboard built through voice-driven developmen
 
 - **Framework**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - **Build Tool**: [Vite 8](https://vite.dev/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) + GDG Google Design System
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Backend / Cloud**: [Supabase](https://supabase.com/) PostgreSQL + Live Sync + Auth
 - **Persistence**: Hybrid Supabase Cloud DB + Offline `localStorage` Fallback

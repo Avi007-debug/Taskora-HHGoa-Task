@@ -223,7 +223,7 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
                   setTitle(e.target.value);
                   if (error) setError('');
                 }}
-                placeholder={isListening ? "Listening... Speak task title" : "e.g. Prepare presentation for GDG community meetup"}
+                placeholder={isListening ? "Listening... Speak task title" : "e.g. Prepare presentation for team sync"}
                 className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none pr-12 transition-all ${
                   isListening
                     ? 'border-[#EA4335] ring-2 ring-red-500/20'
@@ -266,7 +266,7 @@ export const AddTask: FC<AddTaskProps> = ({ onAddTask }) => {
             />
           </div>
 
-          {/* Priority selection with GDG colors */}
+          {/* Priority selection */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
               Priority Level

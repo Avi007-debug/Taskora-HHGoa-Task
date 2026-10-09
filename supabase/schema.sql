@@ -133,7 +133,7 @@ order by created_at desc;
 insert into public.tasks (id, title, description, priority, completed, created_at)
 values (
   'task_' || substr(md5(random()::text), 1, 8),
-  'Prepare GDG presentation with Wispr Flow',
+  'Prepare Team presentation with Wispr Flow',
   'Draft speaker slides and practice voice dictation demo.',
   'high',
   false,
