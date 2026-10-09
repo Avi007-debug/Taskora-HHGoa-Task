@@ -22,6 +22,7 @@ import { TaskBoard } from './components/tasks/TaskBoard';
 import { FocusTimer } from './components/timer/FocusTimer';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { AuthModal } from './components/auth/AuthModal';
+import { WelcomeSplash } from './components/common/WelcomeSplash';
 import { Mic, ExternalLink } from 'lucide-react';
 
 export function App() {
@@ -29,6 +30,7 @@ export function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [sessions, setSessions] = useState<FocusSession[]>(() => loadFocusSessions());
   const [isCloudSynced, setIsCloudSynced] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
 
   // Authentication State
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -249,9 +251,21 @@ export function App() {
           aria-label="Productivity Dashboard Module"
           className={activeTab === 'dashboard' ? 'block' : 'hidden'}
         >
-          <Dashboard tasks={tasks} sessions={sessions} />
+          <Dashboard
+            tasks={tasks}
+            sessions={sessions}
+            onAddTask={handleAddTask}
+            onNavigateToTasks={() => setActiveTab('tasks')}
+          />
         </section>
       </main>
+
+      {/* Landing Entrance Animation (Opens on Refresh & Click) */}
+      {showSplash && (
+        <WelcomeSplash
+          onDismiss={() => setShowSplash(false)}
+        />
+      )}
 
       {/* Auth Modal */}
       <AuthModal
@@ -271,6 +285,14 @@ export function App() {
             <span>GDG-Themed VoiceBoard</span>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setShowSplash(true)}
+              className="text-[#1a73e8] dark:text-blue-400 hover:underline font-semibold cursor-pointer"
+              title="Replay landing page entrance animation"
+            >
+              Replay Intro Animation
+            </button>
             <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 1: Tasks ✓</span>
             <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 2: Timer ✓</span>
             <span className="text-[#1e8e3e] dark:text-[#34A853] font-semibold">Person 3: Dashboard ✓</span>
